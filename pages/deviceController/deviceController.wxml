@@ -1,0 +1,45 @@
+<view class="view">
+
+    <scroll-view class="data-list" scroll-y="true">
+
+        <view wx:for="{{dataList}}" wx:key="{{index}}" class="data-item" data-index="{{index}}">
+
+            <block wx:if="{{item.dataType == receiveType}}">
+                <view class="receive">
+                    <!--类型-->
+                    <view class="receive-type">{{item.dataType}}</view>
+                    <!--数据-->
+                    <view class="receive-content">{{item.content}}</view>
+                </view>
+            </block>
+
+            <block wx:elif="{{item.dataType == sendType}}">
+                <view class="send">
+                    <!--类型-->
+                    <view class="send-type">{{item.dataType}}</view>
+                    <!--数据-->
+                    <view class="send-content">{{item.content}}</view>
+                </view>
+            </block>
+
+            <block wx:else>
+                <view class="other">
+                    <!--数据-->
+                    <view class="other-content">{{item.content}}</view>
+                </view>
+            </block>
+
+            <!--分割线-->
+            <view class="separator-line"></view>
+        </view>
+
+        
+
+  </scroll-view>
+
+  <view class="footer">
+        <input class="footer-input" bindinput="bindInputData" placeholder="请输入十六进制数"  />
+        <button class="sendBtn" bindtap="bindSend" type="primary">发送</button>
+    </view>
+
+</view>

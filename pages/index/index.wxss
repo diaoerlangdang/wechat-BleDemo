@@ -1,0 +1,59 @@
+/**index.wxss**/
+.container {
+  width: 100%;
+  height: 100%;
+  font-size: 14px;
+  font-family: 微软雅黑;
+}
+
+.list-title {
+  padding-left: 5px;
+  padding-bottom: 5px;
+  padding-top: 5px;
+  font-size: 16px;
+  background: #d0d0d0;
+}
+
+.scan-btn {
+  background: #4848a8;
+  color: white;
+  margin: 5px;
+}
+
+/*蓝牙列表*/
+.ble-list {
+
+}
+
+/*列表单元*/
+.ble-item {
+  width: 100%;
+}
+
+/*列表单元主体*/
+.ble-body {
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+/*设备名称*/
+.ble-name {
+
+}
+
+/*设备id*/
+.ble-id {
+  color: gray;
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+/*列表分割线*/
+.separator-line {
+  height: 1px;
+  background: lightgray;
+  margin-left: 5px;
+  margin-right: 5px;
+}
