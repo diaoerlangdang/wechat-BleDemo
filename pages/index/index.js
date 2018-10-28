@@ -205,6 +205,16 @@ Page({
     wx.navigateTo({
       url: '../deviceController/deviceController'
     })
+
+    this.setData({
+      scanBtnData: '开始扫描',
+      isScanning: false,
+    })
+    wx.stopBluetoothDevicesDiscovery({
+      success: function (res) {
+        // success
+      }
+    })
   },
 
   //更新数据 devices为数组类型

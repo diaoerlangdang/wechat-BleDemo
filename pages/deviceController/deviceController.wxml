@@ -38,7 +38,7 @@
   </scroll-view>
 
   <view class="footer">
-        <input class="footer-input" bindinput="bindInputData" placeholder="请输入十六进制数"  />
+        <input class="footer-input" bindinput="bindInputData" placeholder="请输入十六进制数" value='' />
         <button class="sendBtn" bindtap="bindSend" type="primary">发送</button>
     </view>
 

@@ -45,6 +45,7 @@ Page({
 
       },
       fail: function(res) {
+        console.log(res)
         that.addData({dataType:"其他",content:"连接失败"})
       }
     })
@@ -75,43 +76,66 @@ Page({
     console.log('发送按钮',device)
 
     var tempSendData = this.data.inputData
-    var buffer = this.stringToHexBuffer(data)
+    var buffer = this.stringToHexBuffer(tempSendData)
 
-    wx.writeBLECharacteristicValue({
-      deviceId: device.deviceId,
-      serviceId: that.data.serviceId,
-      characteristicId: that.data.sendId,
-      value: buffer,
-      success: function (res) {
-        // success
-        console.log('write success:', res)
-        that.addData({ dataType: "发送", content: data })
-      },
-      fail: function (res) {
-        // fail
-        console.log('write failed:', res)
-        that.addData({ dataType: "其他", content: '发送失败' })
-      },
-      complete: function (res) {
-        // complete
-        console.log('write', res)
-      }
+    var p = new Promise(function (resolve, reject) {
+      console.log('开始 new Promise...');
+      resolve(tempSendData);
+    });
+
+    var count = parseInt((tempSendData.length + 39)/40)
+    for(var i=0; i<count; i++) {
+      p = p.then(this.sendData)
+    }
+
+    p.then(function (resolve, reject) {
+      that.addData({ dataType: "发送", content: tempSendData })
+    }).catch(function (reason) {
+      console.log('失败了了,' + reason)
+      that.addData({ dataType: "其他", content: '发送失败' })
     })
     
   },
 
   //发送数据
-  // sendData:function (data) {
+  sendData:function (data) {
 
-  //   var that = this
-  //   var device = app.globalData.selectDevice
-  //   var buffer = this.stringToHexBuffer(data)
-  //   return new Promise(function (resolve, reject) {
+    var that = this
+    var device = app.globalData.selectDevice
 
+    //前20个字节
+    var before = data.substring(0, 40)
+    var after = data.substring(40)
+
+    console.log('发送数据'+before)
+
+    var buffer = this.stringToHexBuffer(before)
+    return new Promise(function (resolve, reject) {
+
+      wx.writeBLECharacteristicValue({
+        deviceId: device.deviceId,
+        serviceId: that.data.serviceId,
+        characteristicId: that.data.sendId,
+        value: buffer,
+        success: function (res) {
+          // success
+          console.log('write success:', res)
+          resolve(after)
+        },
+        fail: function (res) {
+          // fail
+          console.log('write failed:', res)
+          reject('发送失败')
+        },
+        complete: function (res) {
+          // complete
+          console.log('write', res)
+        }
+      })
       
 
-  //   })
-  // },
+    })
+  },
 
   //获取服务
   getServiceAndCharacteristics: function (device) {
