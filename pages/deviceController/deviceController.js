@@ -17,11 +17,9 @@ Page({
       // receiveId:"0000fff1-0000-1000-8000-00805f9b34fb",
       // "sendId":"0000fff2-0000-1000-8000-00805f9b34fb",
   },
-
   onLoad: function (options) {
     var device = app.globalData.selectDevice
-    var that = this;   
-       
+    var that = this;
     wx.setNavigationBarTitle({
       title: device.name,
       success: function(res) {
@@ -77,30 +75,43 @@ Page({
     console.log('发送按钮',device)
 
     var tempSendData = this.data.inputData
-    var buffer = that.stringToHexBuffer(tempSendData)
-    console.log("send data:", buffer)
+    var buffer = this.stringToHexBuffer(data)
 
     wx.writeBLECharacteristicValue({
       deviceId: device.deviceId,
-      serviceId: that.getServiceId(),
-      characteristicId: that.getSendId(),
+      serviceId: that.data.serviceId,
+      characteristicId: that.data.sendId,
       value: buffer,
-      success: function(res){
+      success: function (res) {
         // success
         console.log('write success:', res)
-        that.addData({dataType:"发送",content:tempSendData})
+        that.addData({ dataType: "发送", content: data })
       },
-      fail: function(res) {
+      fail: function (res) {
         // fail
         console.log('write failed:', res)
-        that.addData({dataType:"其他",content:'发送失败'})
+        that.addData({ dataType: "其他", content: '发送失败' })
       },
-      complete: function(res) {
+      complete: function (res) {
         // complete
         console.log('write', res)
       }
     })
+    
   },
+
+  //发送数据
+  // sendData:function (data) {
+
+  //   var that = this
+  //   var device = app.globalData.selectDevice
+  //   var buffer = this.stringToHexBuffer(data)
+  //   return new Promise(function (resolve, reject) {
+
+      
+
+  //   })
+  // },
 
   //获取服务
   getServiceAndCharacteristics: function (device) {
@@ -113,7 +124,7 @@ Page({
           
           wx.getBLEDeviceCharacteristics({
             deviceId: device.deviceId,
-            serviceId: that.getServiceId(),
+            serviceId: that.data.serviceId,
             success: function(res){
               console.log('特征',res)
 
@@ -130,8 +141,8 @@ Page({
 
               wx.notifyBLECharacteristicValueChanged({
                 deviceId: device.deviceId,
-                serviceId: that.getServiceId(),
-                characteristicId: that.getReceiveId(),
+                serviceId: that.data.serviceId,
+                characteristicId: that.data.receiveId,
                 state: true,
                 success: function(res){
                   // success
@@ -199,58 +210,10 @@ Page({
         out+="\\u"+single;
     }
     return out//eval("'"+out+ "'");
-  },
-
-  //获取发送id
-  getSendId: function () {
-    var platform = app.globalData.platform
-
-    //ios 平台 服务id 中字母必须为大写
-    if (platform == "ios") {
-      return this.data.sendId.toUpperCase();
-      }
-    //android 平台 服务id 中字母必须为小写
-    else if (platform == "android") {
-      return this.data.sendId.toLowerCase();
-      }
-    else {
-      return this.data.sendId
-      }
-    },
-
-  //服务id
-  getServiceId: function () {
-
-    var platform = app.globalData.platform
-
-    //ios 平台 服务id 中字母必须为大写
-    if (platform == "ios") {
-      return this.data.serviceId.toUpperCase();
-    }
-    //android 平台 服务id 中字母必须为小写
-    else if (platform == "android") {
-      return this.data.serviceId.toLowerCase();
-    }
-    else {
-      return this.data.serviceId
-    }
-  },
-
-  //通知id
-  getReceiveId: function () {
-
-    var platform = app.globalData.platform
-    
-    //ios 平台 服务id 中字母必须为大写
-    if (platform == "ios") {
-      return this.data.receiveId.toUpperCase();
-    }
-    //android 平台 服务id 中字母必须为小写
-    else if (platform == "android") {
-      return this.data.receiveId.toLowerCase();
-    }
-    else {
-      return this.data.receiveId
-    }
   }
+
+  
+
+  
+
 })

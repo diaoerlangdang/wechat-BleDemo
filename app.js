@@ -3,7 +3,6 @@ App({
 
   globalData: {
     selectDevice:null,
-    platform:null,
   },
 
   onLaunch: function () {
@@ -11,13 +10,6 @@ App({
     var logs = wx.getStorageSync('logs') || []
     logs.unshift(Date.now())
     wx.setStorageSync('logs', logs)
-
-    var that = this
-    wx.getSystemInfo({
-      success: function(res) {
-        that.globalData.platform = res["platform"].toLowerCase()
-      },
-    })
   },
   getUserInfo:function(cb){
     var that = this
