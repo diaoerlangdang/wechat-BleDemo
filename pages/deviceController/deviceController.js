@@ -10,9 +10,15 @@ Page({
       sendType:"发送",
       otherType:"其他",
       inputData:"",
+
+      sendByteLen: 0, // 已发送的字节数长度
+      receiveByteLen: 0, // 已接收的字节数长度
+      receiveSpeed: 0, // 实时速率，每秒接收字节数
+      recLenBySecond: 0, // 计算速率使用
+
       serviceId:"0000FFF0-0000-1000-8000-00805F9B34FB",
       receiveId:"0000FFF1-0000-1000-8000-00805F9B34FB",
-      "sendId":"0000FFF2-0000-1000-8000-00805F9B34FB",
+      sendId:"0000FFF2-0000-1000-8000-00805F9B34FB",
       // serviceId:"0000fff0-0000-1000-8000-00805f9b34fb",
       // receiveId:"0000fff1-0000-1000-8000-00805f9b34fb",
       // "sendId":"0000fff2-0000-1000-8000-00805f9b34fb",
@@ -50,6 +56,8 @@ Page({
       }
     })
 
+    this.startComputeSpeedTimer();
+
   },
 
   //页面销毁时调用
@@ -62,11 +70,35 @@ Page({
     })
   },
 
+  // 开始计算速率
+  startComputeSpeedTimer: function() {
+    var that = this
+    setInterval(function () {
+      that.setData({
+        receiveSpeed: that.data.recLenBySecond,
+        recLenBySecond: 0,
+      })
+    }, 1000) //循环时间 这里是1秒 
+  },
+
   //input输入
   bindInputData: function (e) {
     this.setData({
       inputData: e.detail.value
     })
+  },
+
+  // 清空列表
+  bindClearAll: function() {
+    this.setData({
+      dataList:[],
+      sendByteLen: 0, // 已发送的字节数长度
+      receiveByteLen: 0, // 已接收的字节数长度
+    })
+  },
+
+  // 设置
+  bindSet: function() {
   },
 
   //发送按钮
@@ -77,6 +109,10 @@ Page({
 
     var tempSendData = this.data.inputData
     var buffer = this.stringToHexBuffer(tempSendData)
+    console.log('测试' + buffer.length)
+    this.setData({
+        sendByteLen: that.data.sendByteLen + buffer.byteLength,
+      })
 
     var p = new Promise(function (resolve, reject) {
       console.log('开始 new Promise...');
@@ -132,8 +168,6 @@ Page({
           console.log('write', res)
         }
       })
-      
-
     })
   },
 
@@ -159,6 +193,10 @@ Page({
                 // callback
                 console.log('value change', res)
                 const hex = that.buf2hex(res.value)
+                that.setData({
+                  receiveByteLen: that.data.receiveByteLen + res.value.byteLength,
+                  recLenBySecond: that.data.recLenBySecond + res.value.byteLength,
+                })
                 console.log('返回的数据：', hex)
                 that.addData({dataType:"接收",content:hex})
               })

@@ -5,11 +5,10 @@
   
   <view class="list-title">蓝牙列表  </view>
 
-  
 
   <scroll-view class="ble-list" scroll-y="true">
 
-    <view wx:for="{{bleList}}" wx:key="{{index}}" class="ble-item" data-index="{{index}}" bindtap="onSelectedDevice">
+    <view wx:for="{{bleList}}" wx:key="index" class="ble-item" data-index="{{index}}" bindtap="onSelectedDevice">
 
       <view class="ble-body">
         <!--蓝牙名称-->

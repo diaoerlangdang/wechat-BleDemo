@@ -140,6 +140,7 @@ Page({
         //监听扫描
         wx.onBluetoothDeviceFound(function(res) {
 
+          console.log(res)
           // res电脑模拟器返回的为数组；手机返回的为蓝牙设备对象
           if (res instanceof Array) {
             // console.log("数组")

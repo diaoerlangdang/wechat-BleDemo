@@ -1,6 +1,53 @@
 
+.tips {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+  margin: 0 auto;
+  position: fixed;
+  padding-left: 10px;
+  padding-bottom: 3px;
+  top: 0rpx;
+  padding-right: 10px;
+  background: #fff;
+}
+
+.tips_text {
+  font-size: 9px;
+}
+
+.tips_receivce_bytes {
+  float: right;
+  margin-right: 3%;
+  padding-right: 10px;
+}
+
+.tips_speed {
+  margin: 0 auto;
+}
+
+.title {
+    padding-left: 10px;
+    padding-right: 5px;
+    position: fixed;
+    width: 100%;
+    top: 0rpx;
+    margin-top: 15px;
+    overflow: hidden;
+    background: #fff;
+}
+
+.titleBtn {
+  height: 30px;
+  display: block;
+  margin-right: 3%;
+  float: right;
+}
+
 .data-list {
   padding-bottom: 60px;
+  padding-top: 35px;
 }
 
 .footer {

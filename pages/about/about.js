@@ -6,7 +6,12 @@ Page({
     
   },
   onLoad: function () {
-    console.log('onLoad about')
+    wx.setNavigationBarTitle({
+      title: "关于我们",
+      success: function(res) {
+        // success
+      }
+    })
 
   }
 })

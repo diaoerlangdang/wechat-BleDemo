@@ -1,0 +1,20 @@
+.container {
+  width: 100%;
+  height: 100%;
+  font-size: 14px;
+  font-family: 微软雅黑;
+}
+
+.title {
+  padding-left: 15px;
+  padding-bottom: 5px;
+  padding-top: 15px;
+  font-size: 16px;
+}
+
+.info {
+  padding-left: 15px;
+  padding-bottom: 5px;
+  padding-top: 5px;
+  font-size: 16px;
+}

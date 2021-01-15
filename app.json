@@ -1,31 +1,34 @@
 {
-  "pages":[
+  "pages": [
     "pages/index/index",
     "pages/about/about",
-    "pages/deviceController/deviceController"
+    "pages/deviceController/deviceController",
+    "pages/set/set"
   ],
-  "window":{
-    "backgroundTextStyle":"light",
+  "window": {
+    "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#fff",
     "navigationBarTitleText": "蓝牙",
-    "navigationBarTextStyle":"black"
+    "navigationBarTextStyle": "black"
   },
   "tabBar": {
     "color": "#c0c0c0",
     "selectedColor": "#0808dd",
-    "list": [{
-      "pagePath": "pages/index/index",
-      "text": "蓝牙",
-      "iconPath": "images/home.png",
-      "selectedIconPath": "images/home-select.png"
-    },
-    {
-      "pagePath": "pages/about/about",
-      "text": "关于我们",
-      "iconPath": "images/about.png",
-      "selectedIconPath": "images/about-select.png"
-    }]
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "蓝牙",
+        "iconPath": "images/home.png",
+        "selectedIconPath": "images/home-select.png"
+      },
+      {
+        "pagePath": "pages/about/about",
+        "text": "关于我们",
+        "iconPath": "images/about.png",
+        "selectedIconPath": "images/about-select.png"
+      }
+    ]
   },
-
-  "debug": true
+  "debug": true,
+  "sitemapLocation": "sitemap.json"
 }
