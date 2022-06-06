@@ -1,18 +1,7 @@
-//index.js
-//获取应用实例
-
-var app = getApp()
-
-// ArrayBuffer转16进度字符串示例
-function ab2hex(buffer) {
-  var hexArr = Array.prototype.map.call(
-    new Uint8Array(buffer),
-    function (bit) {
-      return ('00' + bit.toString(16)).slice(-2)
-    }
-  )
-  return hexArr.join('');
-}
+// index.js
+// 获取应用实例
+const app = getApp()
+const util = require('../../utils/util')
 
 Page({
   data: {
@@ -26,21 +15,20 @@ Page({
 
     initSuccess: true, //初始化是否成功
   },
-  onLoad: function () {
-    console.log('onLoad index')
 
+  onLoad() {
+    
     this.monitorBleChange()
 
     this.initBle()
 
-    var that = this
-    setInterval(function () {
+    setInterval(() => {
 
       //循环执行代码 
-      if (!that.data.isAvailable && !that.data.isToasting) {
+      if (!this.data.isAvailable && !this.data.isToasting) {
 
         //已经弹窗
-        that.setData({
+        this.setData({
           isToasting: true
         })
 
@@ -48,11 +36,11 @@ Page({
           title: '提示',
           content: '请打开蓝牙和GPS！',
           showCancel: false,
-          success: function (res) {
+          success: (res) => {
             if (res.confirm) {
 
               //没有弹窗
-              that.setData({
+              this.setData({
                 isToasting: false
               })
             } else if (res.cancel) {
@@ -63,74 +51,72 @@ Page({
       }
     }, 5000) //循环时间 这里是5秒 
 
-    setInterval(function () {
+    setInterval(() => {
 
-      if (that.data.isScanning) {
+      if (this.data.isScanning) {
 
         //停止扫描
         wx.stopBluetoothDevicesDiscovery({
-          success: function (res) {
+          success: (res) => {
             // success
           }
         })
 
 
-        setTimeout(function () {
+        setTimeout(() => {
           //要延时执行的代码 
 
           //开始扫描
           wx.startBluetoothDevicesDiscovery({
             allowDuplicatesKey: true,
-            success: function (res) {
+            success: (res) => {
             }
           })
         }, 200) //延迟时间 这里是300ms 
-
       }
-
     }, 5000) //循环时间 这里是5秒 
-
   },
 
-  //蓝牙监听
-  monitorBleChange: function () {
-    var that = this;
+  onHide() {
+    if (this.data.isScanning) {
+      this.scan();
+    }
+  },
 
+
+  //蓝牙监听
+  monitorBleChange() {
     //蓝牙状态更改，扫描状态更改，都会执行该函数
-    wx.onBluetoothAdapterStateChange(function (res) {
+    wx.onBluetoothAdapterStateChange((res) => {
 
       //若没有正在扫描，蓝牙是否可用
-      if (!that.data.isScanning && res["available"]) {
+      if (!this.data.isScanning && res.available) {
 
-        that.initBle()
+        this.initBle()
       }
-      else if (!res["available"]) {
-        that.setData({
+      else if (!res.available) {
+        this.setData({
           scanBtnData: "开始扫描",
           isScanning: false,
           scanBtnDisable: true,
           isAvailable: false
         })
       }
-
     })
-
   },
 
   //初始化蓝牙
-  initBle: function () {
-    var that = this;
-
+  initBle () {
     // wx.onBluetoothAdapterStateChange(function(res) {
     //   console.log('adapterState changed, now is', res)
     //   })
 
     //打开蓝牙适配器
     wx.openBluetoothAdapter({
-      success: function(res){
+      success: (res) => {
 
         //使能按钮
-        that.setData({
+        this.setData({
           scanBtnData: "开始扫描",
           isScanning: false,
           scanBtnDisable: false,
@@ -138,36 +124,36 @@ Page({
         })
         
         //监听扫描
-        wx.onBluetoothDeviceFound(function(res) {
-
-          console.log(res)
+        wx.onBluetoothDeviceFound((res) => {
+          if (res.devices[0].name.startsWith('HJ')) {
+            console.log('onBluetoothDeviceFound', res)
+          }
+          
           // res电脑模拟器返回的为数组；手机返回的为蓝牙设备对象
           if (res instanceof Array) {
             // console.log("数组")
-            that.updateBleList(res)
+            this.updateBleList(res)
           }
           else {
             // console.log("对象")
-            that.updateBleList([res])
+            this.updateBleList([res])
           }
 
         })
 
       },
-      fail: function(res) {
+      fail:(res) => {
         // fail
-        console.log(res)
+        console.log('fail', res)
       },
-      complete: function(res) {
+      complete:(res) => {
         // complete
       }
     })
   },
 
   //扫描
-  scan: function (view) {
-    var that = this;
-
+  scan(view) {
     var scanTitle = "开始扫描"
     if (this.data.scanBtnData == scanTitle) {
       scanTitle = "停止扫描"
@@ -181,7 +167,7 @@ Page({
       //开始扫描
       wx.startBluetoothDevicesDiscovery({
         allowDuplicatesKey:true,
-        success: function(res){
+        success: (res) => {
         }
       })
     }
@@ -191,7 +177,7 @@ Page({
         isScanning: false,
       })
       wx.stopBluetoothDevicesDiscovery({
-        success: function(res){
+        success:(res) =>{
           // success
         }
       })
@@ -199,7 +185,7 @@ Page({
   },
 
   //点击设备
-  onSelectedDevice: function (view) {
+  onSelectedDevice (view) {
     var index = view.currentTarget.dataset.index
     var device = this.data.bleList[index]
     app.globalData.selectDevice = device
@@ -212,14 +198,14 @@ Page({
       isScanning: false,
     })
     wx.stopBluetoothDevicesDiscovery({
-      success: function (res) {
+      success: (res) => {
         // success
       }
     })
   },
 
   //更新数据 devices为数组类型
-  updateBleList: function(devices) {
+  updateBleList(devices) {
       var newData = this.data.bleList
       var tempDevice = null;
       for(var i=0; i<devices.length; i++) {
@@ -236,18 +222,38 @@ Page({
         else {
           tempDevice = devices[i];
         }
+        
+        // 过滤
+        if (tempDevice.name == '') {
+          continue
+        }
+        if (tempDevice.advertisServiceUUIDs.length == 1) {
+          if (!tempDevice.advertisServiceUUIDs[0].toUpperCase().startsWith("00006958")) {
+            continue
+          }
+        }
+        else if (tempDevice.advertisServiceUUIDs.length == 4) {
+          if (!tempDevice.advertisServiceUUIDs[0].toUpperCase().startsWith("00006958") &&
+              !tempDevice.advertisServiceUUIDs[0].toUpperCase().startsWith("00006959")) {
+                continue
+          }
+        }
+        else {
+          continue;
+        }
+
         if (!this.isExist(tempDevice)) {
           newData.push(tempDevice)
         }
       }
-      console.log(newData)
+      // console.log(newData)
       this.setData({
         bleList:newData
       })
   },
 
   //是否已存在 存在返回true 否则false
-  isExist: function(device) {
+  isExist(device) {
     var tempData = this.data.bleList
     for(var i=0; i<tempData.length; i++) {
         if (tempData[i].deviceId == device.deviceId) {
@@ -256,5 +262,4 @@ Page({
       }
       return false
   }
-
 })

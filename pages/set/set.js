@@ -1,66 +1,105 @@
-// pages/set.js
+// pages/set/set.js
+var app = getApp()
+
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
+    characterTypeList: [
+      {
+        name: 'Hex',
+        value: true,
+      }, 
+      {
+        name: 'ASCII',
+        value: false,
+      }
+    ],
+    modeTypeList: [
+      {
+        name: '数据模式',
+        value: false,
+      }, 
+      {
+        name: '配置模式',
+        value: true,
+      }
+    ],
+    // 字符
+    showCharacter: false,
+    // 模式
+    showMode: false,
 
+    characterStr: 'Hex',
+    modeStr: '数据模式',
+
+    isSuppotConfig: false,
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
-  onLoad: function (options) {
+  onLoad(options) {
+    this.setData({
+      isSuppotConfig: app.globalData.isSuppotConfig
+    }) 
+    let info = this.data.modeTypeList.find((item)=> app.globalData.isBleConfig == item.value);
+    if (info) {
+      this.setData({
+        modeStr: info.name
+      })
+    }
 
+    info = this.data.characterTypeList.find((item)=> app.globalData.isBleHex == item.value);
+    if (info) {
+      this.setData({
+        characterStr: info.name
+      })
+    }
   },
 
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady: function () {
-
+  showCharacterPicker() {
+    this.setData({
+      showCharacter: true,
+    })
   },
 
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow: function () {
-
+  showModePicker() {
+    this.setData({
+      showMode: true,
+    })
   },
 
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide: function () {
-
+  onCancelSelectCharacter() {
+    this.setData({
+      showCharacter: false,
+    })
   },
 
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload: function () {
+  // 切换字符
+  onConfirmSelectCharacter(event) {
+    this.setData({
+      characterStr: event.detail.name
+    })
 
+    app.setBleHex(event.detail.value)
   },
 
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh: function () {
-
+  onCancelSelectMode() {
+    this.setData({
+      showMode: false,
+    })
   },
 
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom: function () {
+  // 切换模式
+  onConfirmSelectMode(event) {
+    this.setData({
+      modeStr: event.detail.name
+    })
 
+    app.setBleConfig(event.detail.value)
   },
 
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage: function () {
-
-  }
 })

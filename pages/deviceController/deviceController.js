@@ -1,95 +1,139 @@
-//deviceController.js
-//获取应用实例
-//wuruizhi
+// pages/deviceController/deviceController.js
 
 var app = getApp()
+const util = require('../../utils/util')
 Page({
+
+  /**
+   * 页面的初始数据
+   */
   data: {
-      dataList:[{dataType:"其他",content:"正在连接。。。"}],
-      receiveType:"接收",
-      sendType:"发送",
-      otherType:"其他",
-      inputData:"",
+    dataList:[{dataType:"其他",content:"正在连接。。。"}],
+    receiveType:"接收",
+    sendType:"发送",
+    otherType:"其他",
+    inputData:"",
+    inputPlaceholder: '请输入十六进制数',
 
-      sendByteLen: 0, // 已发送的字节数长度
-      receiveByteLen: 0, // 已接收的字节数长度
-      receiveSpeed: 0, // 实时速率，每秒接收字节数
-      recLenBySecond: 0, // 计算速率使用
+    sendByteLen: 0, // 已发送的字节数长度
+    receiveByteLen: 0, // 已接收的字节数长度
+    receiveSpeed: 0, // 实时速率，每秒接收字节数
+    recLenBySecond: 0, // 计算速率使用
 
-      serviceId:"0000FFF0-0000-1000-8000-00805F9B34FB",
-      receiveId:"0000FFF1-0000-1000-8000-00805F9B34FB",
-      sendId:"0000FFF2-0000-1000-8000-00805F9B34FB",
-      // serviceId:"0000fff0-0000-1000-8000-00805f9b34fb",
-      // receiveId:"0000fff1-0000-1000-8000-00805f9b34fb",
-      // "sendId":"0000fff2-0000-1000-8000-00805f9b34fb",
+    serviceId:"0000FFF0-0000-1000-8000-00805F9B34FB",
+    receiveId:"0000FFF1-0000-1000-8000-00805F9B34FB",
+    sendId:"0000FFF2-0000-1000-8000-00805F9B34FB",
+    
+    configServiceId: "0000FFF0-0000-1000-8000-00805F9B34FB",
+    configReceiveId:"0000FFF3-0000-1000-8000-00805F9B34FB",
+    configSendId:"0000FFF3-0000-1000-8000-00805F9B34FB",
+    // serviceId:"0000fff0-0000-1000-8000-00805f9b34fb",
+    // receiveId:"0000fff1-0000-1000-8000-00805f9b34fb",
+    // "sendId":"0000fff2-0000-1000-8000-00805f9b34fb",
   },
-  onLoad: function (options) {
+
+  /**
+   * 生命周期函数--监听页面加载
+   */
+  onLoad(options) {
+    // 复位
+    app.globalData.isSuppotConfig = false;
+    app.setBleConfig(false)
+
     var device = app.globalData.selectDevice
-    var that = this;
     wx.setNavigationBarTitle({
       title: device.name,
-      success: function(res) {
+      success:(res) =>{
         // success
       }
     })
 
     //监听连接
-    wx.onBLEConnectionStateChanged(function(res) {
+    wx.onBLEConnectionStateChanged((res) => {
       console.log('state changed ', res)
       if(!res.connected) {
-        that.addData({dataType:"其他",content:"连接已断开"})
+        this.addData({dataType:"其他",content:"连接已断开"})
       }
     })
 
     wx.createBLEConnection({
       deviceId: device.deviceId,
-      success: function(res){ 
+      success: (res) =>{ 
         // success
         console.log('createBLEConnection')
-        that.addData({dataType:"其他",content:"连接成功，正在扫描服务。。。"})
-        that.getServiceAndCharacteristics(device)
+        this.addData({dataType:"其他",content:"连接成功，正在扫描服务。。。"})
+        this.getServiceAndCharacteristics(device)
 
       },
-      fail: function(res) {
-        console.log(res)
-        that.addData({dataType:"其他",content:"连接失败"})
+      fail:(res) => {
+        console.log('createBLEConnection 失败  ', res)
+        this.addData({dataType:"其他",content:"连接失败"})
       }
     })
 
     this.startComputeSpeedTimer();
+  },
+
+  /**
+   * 生命周期函数--监听页面初次渲染完成
+   */
+  onReady() {
 
   },
 
-  //页面销毁时调用
-  onUnload: function () {
+  /**
+   * 生命周期函数--监听页面显示
+   */
+  onShow() {
+    if (app.globalData.isBleHex) {
+      this.setData({
+        inputPlaceholder: '请输入十六进制数'
+      })
+    }else {
+      this.setData({
+        inputPlaceholder: '请输入字符数据'
+      })
+    }
+  },
+
+  /**
+   * 生命周期函数--监听页面隐藏
+   */
+  onHide() {
+
+  },
+
+  /**
+   * 生命周期函数--监听页面卸载
+   */
+  onUnload() {
     wx.closeBLEConnection({
       deviceId:app.globalData.selectDevice.deviceId,
-      success: function(res){
+      success: (res) => {
         // success
       }
     })
   },
 
   // 开始计算速率
-  startComputeSpeedTimer: function() {
-    var that = this
-    setInterval(function () {
-      that.setData({
-        receiveSpeed: that.data.recLenBySecond,
+  startComputeSpeedTimer() {
+    setInterval(() => {
+      this.setData({
+        receiveSpeed: this.data.recLenBySecond,
         recLenBySecond: 0,
       })
     }, 1000) //循环时间 这里是1秒 
   },
 
   //input输入
-  bindInputData: function (e) {
+  bindInputData(e) {
     this.setData({
       inputData: e.detail.value
     })
   },
 
   // 清空列表
-  bindClearAll: function() {
+  bindClearAll() {
     this.setData({
       dataList:[],
       sendByteLen: 0, // 已发送的字节数长度
@@ -98,23 +142,37 @@ Page({
   },
 
   // 设置
-  bindSet: function() {
+  bindSet() {
+    wx.navigateTo({
+      url: '../set/set',
+    })
   },
 
   //发送按钮
-  bindSend: function () {
-    var that = this
-    var device = app.globalData.selectDevice
-    console.log('发送按钮',device)
+  bindSend() {
+    // var device = app.globalData.selectDevice
 
-    var tempSendData = this.data.inputData
-    var buffer = this.stringToHexBuffer(tempSendData)
-    console.log('测试' + buffer.length)
+    let tempSendData = this.data.inputData
+    let sendDataLen = 0;
+    // 十六进制
+    if (app.globalData.isBleHex) {
+      // 必须是偶数
+      if (tempSendData.length % 2 != 0) {
+        return
+      }
+      const buffer = util.stringToHexBuffer(tempSendData)
+      sendDataLen = buffer.byteLength
+    } else {
+      const buffer = util.char2buf(tempSendData);
+      sendDataLen = buffer.byteLength
+      tempSendData = util.ab2hex(buffer)
+    }
+
     this.setData({
-        sendByteLen: that.data.sendByteLen + buffer.byteLength,
-      })
-
-    var p = new Promise(function (resolve, reject) {
+      sendByteLen: this.data.sendByteLen + sendDataLen,
+    })
+    
+    var p = new Promise((resolve, reject) => {
       console.log('开始 new Promise...');
       resolve(tempSendData);
     });
@@ -124,19 +182,18 @@ Page({
       p = p.then(this.sendData)
     }
 
-    p.then(function (resolve, reject) {
-      that.addData({ dataType: "发送", content: tempSendData })
-    }).catch(function (reason) {
+    p.then((resolve, reject) => {
+      this.addData({ dataType: "发送", content: this.data.inputData })
+    }).catch((reason) => {
       console.log('失败了了,' + reason)
-      that.addData({ dataType: "其他", content: '发送失败' })
+      this.addData({ dataType: "其他", content: '发送失败' })
     })
     
   },
 
   //发送数据
-  sendData:function (data) {
+  sendData(data) {
 
-    var that = this
     var device = app.globalData.selectDevice
 
     //前20个字节
@@ -145,25 +202,33 @@ Page({
 
     console.log('发送数据'+before)
 
-    var buffer = this.stringToHexBuffer(before)
-    return new Promise(function (resolve, reject) {
+    var buffer = util.stringToHexBuffer(before)
+    return new Promise((resolve, reject) => {
+
+      let serviceId = this.data.serviceId;
+      let characteristicId = this.data.sendId;
+      // 配置模式
+      if (app.globalData.isBleConfig) {
+        serviceId = this.data.configServiceId;
+        characteristicId = this.data.configSendId;
+      }
 
       wx.writeBLECharacteristicValue({
         deviceId: device.deviceId,
-        serviceId: that.data.serviceId,
-        characteristicId: that.data.sendId,
+        serviceId,
+        characteristicId,
         value: buffer,
-        success: function (res) {
+        success: (res) => {
           // success
           console.log('write success:', res)
           resolve(after)
         },
-        fail: function (res) {
+        fail: (res) => {
           // fail
           console.log('write failed:', res)
           reject('发送失败')
         },
-        complete: function (res) {
+        complete: (res) => {
           // complete
           console.log('write', res)
         }
@@ -172,62 +237,93 @@ Page({
   },
 
   //获取服务
-  getServiceAndCharacteristics: function (device) {
-    var that = this
+  getServiceAndCharacteristics(device) {
+    //监听通知
+    wx.onBLECharacteristicValueChange((res) => {      
+      this.setData({
+        receiveByteLen: this.data.receiveByteLen + res.value.byteLength,
+        recLenBySecond: this.data.recLenBySecond + res.value.byteLength,
+      })
+      if (app.globalData.isBleHex) {
+        const hex = util.ab2hex(res.value)
+        console.log('返回的Hex数据：', hex)
+        this.addData({dataType:"接收",content:hex})
+      } else {
+        const info = util.buf2char(res.value)
+        console.log('返回的字符数据：', info)
+        this.addData({dataType:"接收",content:info})
+      }
+    })
+
     wx.getBLEDeviceServices({
         deviceId: device.deviceId,
-        success: function(res){
+        success:(res) => {
           console.log('服务',res)
           // success
           
           wx.getBLEDeviceCharacteristics({
             deviceId: device.deviceId,
-            serviceId: that.data.serviceId,
-            success: function(res){
+            serviceId: this.data.serviceId,
+            success:(res) => {
               console.log('特征',res)
 
-              that.addData({dataType:"其他",content:'扫描成功，正在打开通知。。。'})
-
-              //监听通知
-              wx.onBLECharacteristicValueChange(function(res) {
-                // callback
-                console.log('value change', res)
-                const hex = that.buf2hex(res.value)
-                that.setData({
-                  receiveByteLen: that.data.receiveByteLen + res.value.byteLength,
-                  recLenBySecond: that.data.recLenBySecond + res.value.byteLength,
-                })
-                console.log('返回的数据：', hex)
-                that.addData({dataType:"接收",content:hex})
-              })
+              this.addData({dataType:"其他",content:'扫描成功，正在打开数据服务通知。。。'})
 
               wx.notifyBLECharacteristicValueChanged({
                 deviceId: device.deviceId,
-                serviceId: that.data.serviceId,
-                characteristicId: that.data.receiveId,
+                serviceId: this.data.serviceId,
+                characteristicId: this.data.receiveId,
                 state: true,
-                success: function(res){
+                success: (res) => {
                   // success
                   console.log('notify', res)
-                  that.addData({dataType:"其他",content:'打开通知成功'})
+                  this.addData({dataType:"其他",content:'打开数据服务通知成功'})
                 },
-                fail: function(res) {
+                fail:(res) => {
                   console.log('失败',res)
                 }
               })
-        
+            }
+          })
+
+          // 配置服务
+          wx.getBLEDeviceCharacteristics({
+            deviceId: device.deviceId,
+            serviceId: this.data.configServiceId,
+            success:(res) => {
+
+              const info = res.characteristics.find((item) => item.uuid.toString().toUpperCase() == this.data.configReceiveId.toUpperCase())
+              // 是否包含配置服务
+              if (info) {
+                wx.notifyBLECharacteristicValueChanged({
+                  deviceId: device.deviceId,
+                  serviceId: this.data.configServiceId,
+                  characteristicId: this.data.configReceiveId,
+                  state: true,
+                  success: (res) => {
+                    // success
+                    this.addData({dataType:"其他",content:'打开配置服务通知成功'})
+                    app.globalData.isSuppotConfig = true;
+                  },
+                  fail:(res) => {
+                    console.log('失败',res)
+                  }
+                })
+              }
+
+              
             }
           })
 
         },
-        fail: function(res) {
+        fail:(res)=> {
           console.log('服务扫描失败',res)
         }
       })
   },
 
   //添加数据
-  addData:function (data) {
+  addData (data) {
     var temp = this.data.dataList;
 
     temp.push(data)
@@ -235,47 +331,4 @@ Page({
         dataList:temp
     })
   },
-
-  //字符串转buffer 十六进制
-  stringToHexBuffer: function (data) {
-    // var data = 'AA5504B10000B5'
-    var typedArray = new Uint8Array(data.match(/[\da-f]{2}/gi).map(function (h) {
-        return parseInt(h, 16)
-    }))
-
-    return typedArray.buffer
-  },
-
-  buf2hex: function (buffer) { // buffer is an ArrayBuffer
-        return Array.prototype.map.call(new Uint8Array(buffer), x => ('00' + x.toString(16)).slice(-2)).join('');
-    },
-
-  //字符串转arraybuffer
-  char2buf: function (str) {
-    var out = new ArrayBuffer(str.length*2);
-    var u16a= new Uint16Array(out);
-    var strs = str.split("");
-    for(var i =0 ; i<strs.length;i++){
-        u16a[i]=strs[i].charCodeAt();
-    }
-    return out;
-  },
-
-  //arraybuffer 转字符串
-  buf2char: function (buf) {
-    var out="";
-    var u16a = new Uint16Array(buf);
-    var single ;
-    for(var i=0 ; i < u16a.length;i++){
-        single = u16a[i].toString(16)
-        while(single.length<4) single = "0".concat(single);
-        out+="\\u"+single;
-    }
-    return out//eval("'"+out+ "'");
-  }
-
-  
-
-  
-
 })

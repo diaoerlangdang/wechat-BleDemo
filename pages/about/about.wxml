@@ -1,3 +1,4 @@
+<!--pages/about/about.wxml-->
 <view class="container">
   
   <view class="title">公司名称  </view>

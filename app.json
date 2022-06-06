@@ -5,12 +5,6 @@
     "pages/deviceController/deviceController",
     "pages/set/set"
   ],
-  "window": {
-    "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#fff",
-    "navigationBarTitleText": "蓝牙",
-    "navigationBarTextStyle": "black"
-  },
   "tabBar": {
     "color": "#c0c0c0",
     "selectedColor": "#0808dd",
@@ -29,6 +23,11 @@
       }
     ]
   },
-  "debug": true,
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTitleText": "蓝牙",
+    "navigationBarTextStyle": "black"
+  },
   "sitemapLocation": "sitemap.json"
 }

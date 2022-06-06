@@ -1,3 +1,4 @@
+/* pages/deviceController/deviceController.wxss */
 
 .tips {
   display: flex;

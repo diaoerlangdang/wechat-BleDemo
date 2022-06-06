@@ -1,26 +1,26 @@
 <!--index.wxml-->
 <view class="container">
 
-  <button class="scan-btn" bindtap="scan" disabled="{{scanBtnDisable}}" loading="{{isScanning}}" data-idex="index">{{scanBtnData}}</button>
-  
-  <view class="list-title">蓝牙列表  </view>
+<button class="scan-btn" bindtap="scan" disabled="{{scanBtnDisable}}" loading="{{isScanning}}" data-idex="index">{{scanBtnData}}</button>
+
+<view class="list-title">蓝牙列表  </view>
 
 
-  <scroll-view class="ble-list" scroll-y="true">
+<scroll-view class="ble-list" scroll-y="true">
 
-    <view wx:for="{{bleList}}" wx:key="index" class="ble-item" data-index="{{index}}" bindtap="onSelectedDevice">
+  <view wx:for="{{bleList}}" wx:key="index" class="ble-item" data-index="{{index}}" bindtap="onSelectedDevice">
 
-      <view class="ble-body">
-        <!--蓝牙名称-->
-        <view class="ble-name">{{item.name}}</view>
-        <!--蓝牙id-->
-        <view class="ble-id">{{item.deviceId}}</view>
-      </view>
-
-      <!--分割线-->
-      <view class="separator-line"></view>
+    <view class="ble-body">
+      <!--蓝牙名称-->
+      <view class="ble-name">{{item.name}}</view>
+      <!--蓝牙id-->
+      <view class="ble-id">{{item.deviceId}}</view>
     </view>
 
-  </scroll-view>
-  
+    <!--分割线-->
+    <view class="separator-line"></view>
+  </view>
+
+</scroll-view>
+
 </view>

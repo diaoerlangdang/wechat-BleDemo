@@ -1,35 +1,25 @@
-//app.js
+// app.js
 App({
-
-  globalData: {
-    selectDevice:null,
-  },
-
-  onLaunch: function () {
+  onLaunch() {
     //调用API从本地缓存中获取数据
-    var logs = wx.getStorageSync('logs') || []
-    logs.unshift(Date.now())
-    wx.setStorageSync('logs', logs)
+    this.globalData.isBleHex = wx.getStorageSync('isBleHex')
   },
-  getUserInfo:function(cb){
-    var that = this
-    if(this.globalData.userInfo){
-      typeof cb == "function" && cb(this.globalData.userInfo)
-    }else{
-      //调用登录接口
-      wx.login({
-        success: function () {
-          wx.getUserInfo({
-            success: function (res) {
-              that.globalData.userInfo = res.userInfo
-              typeof cb == "function" && cb(that.globalData.userInfo)
-            }
-          })
-        }
-      })
-    }
+  globalData: {
+    // true--数据模式， false--配置模式
+    isBleConfig: false,
+    // true--十六进制， false--Ascii
+    isBleHex: false,
+    selectDevice:null,
+    // 是否支持配置模式
+    isSuppotConfig: false,
   },
-  globalData:{
-    userInfo:null
+
+  setBleHex(bleHex) {
+    wx.setStorageSync('isBleHex', bleHex)
+    this.globalData.isBleHex = bleHex;
+  },
+
+  setBleConfig(bleConfig) {
+    this.globalData.isBleConfig = bleConfig;
   }
 })

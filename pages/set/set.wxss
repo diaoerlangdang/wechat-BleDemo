@@ -1,1 +1,17 @@
-/* pages/set.wxss */
+/* pages/set/set.wxss */
+
+.item-box {
+  padding: 20rpx;
+  display: flex;
+}
+
+.item-title {
+  color: #333;
+  flex: 1;
+}
+
+.item-info {
+  flex: 1;
+  text-align: right;
+  color: #666;
+}
