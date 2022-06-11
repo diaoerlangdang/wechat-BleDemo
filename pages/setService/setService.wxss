@@ -1,0 +1,22 @@
+/* pages/setService/setService.wxss */
+.container {
+  width: 100%;
+  height: 100%;
+  font-size: 14px;
+  padding: 20rpx;
+  font-family: 微软雅黑;
+}
+
+.item {
+  margin-top: 15rpx;
+}
+
+.tips {
+  color: #f20c00;
+  font-size: 12px;
+  padding-bottom: 30px;
+}
+
+.btn {
+  margin: 50rpx 40rpx;
+}

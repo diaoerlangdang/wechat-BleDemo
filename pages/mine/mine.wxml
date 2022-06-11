@@ -1,0 +1,30 @@
+<!--pages/mine/mine.wxml-->
+<view>
+  <van-cell-group>
+    <van-cell clickable bindtap="changeScanFilter" title="扫描过滤">
+      <van-switch checked="{{ scanFilter }}" />
+    </van-cell>
+    <van-cell clickable is-link bindtap="setDataService" title="数据服务">
+    </van-cell>
+    <van-cell clickable title="版本信息">
+      <text style="color:#333">{{version}}</text>
+    </van-cell>
+    <van-cell clickable is-link bindtap="aboutUs" title="关于我们">
+    </van-cell>
+  </van-cell-group>
+  <!-- <view class="item-box" bindtap="onChangeMode">
+    <view class="item-title">当前模式：</view>
+    <view class="item-info">数据模式</view>
+  </view>
+
+  <view class="item-box" bindtap="onChangeCharacter">
+    <view class="item-title">当前字符：</view>
+    <view class="item-info">Hex</view>
+  </view>
+
+  <picker bindchange="bindPickerChange" value="{{index}}" range="{{array}}">
+    <view class="picker">
+      当前选择：{{array[index]}}
+    </view>
+  </picker> -->
+</view>

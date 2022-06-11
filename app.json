@@ -3,31 +3,36 @@
     "pages/index/index",
     "pages/about/about",
     "pages/deviceController/deviceController",
-    "pages/set/set"
+    "pages/set/set",
+    "pages/mine/mine",
+    "pages/setService/setService"
   ],
   "tabBar": {
-    "color": "#c0c0c0",
-    "selectedColor": "#0808dd",
+    "color": "#333",
+    "selectedColor": "#0387FE",
     "list": [
       {
         "pagePath": "pages/index/index",
         "text": "蓝牙",
-        "iconPath": "images/home.png",
-        "selectedIconPath": "images/home-select.png"
+        "iconPath": "images/home_normal.png",
+        "selectedIconPath": "images/home-selected.png"
       },
       {
-        "pagePath": "pages/about/about",
-        "text": "关于我们",
-        "iconPath": "images/about.png",
-        "selectedIconPath": "images/about-select.png"
+        "pagePath": "pages/mine/mine",
+        "text": "我的",
+        "iconPath": "images/mine_normal.png",
+        "selectedIconPath": "images/mine_selected.png"
       }
     ]
   },
   "window": {
     "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#fff",
+    "navigationBarBackgroundColor": "#0387FE",
     "navigationBarTitleText": "蓝牙",
-    "navigationBarTextStyle": "black"
+    "navigationBarTextStyle": "white"
+  },
+  "usingComponents": {
+    "van-button": "@vant/weapp/button/index"
   },
   "sitemapLocation": "sitemap.json"
 }

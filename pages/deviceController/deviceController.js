@@ -40,6 +40,12 @@ Page({
     app.globalData.isSuppotConfig = false;
     app.setBleConfig(false)
 
+    this.setData({
+      serviceId: app.globalData.dataMainService,
+      receiveId: app.globalData.dataReceiveCharacteristic,
+      sendId: app.globalData.dataSendCharacteristic
+    })
+
     var device = app.globalData.selectDevice
     wx.setNavigationBarTitle({
       title: device.name,
@@ -280,6 +286,7 @@ Page({
                   this.addData({dataType:"其他",content:'打开数据服务通知成功'})
                 },
                 fail:(res) => {
+                  this.addData({dataType:"其他",content:'打开数据服务通知失败'})
                   console.log('失败',res)
                 }
               })

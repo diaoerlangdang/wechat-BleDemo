@@ -227,20 +227,24 @@ Page({
         if (tempDevice.name == '') {
           continue
         }
-        if (tempDevice.advertisServiceUUIDs.length == 1) {
-          if (!tempDevice.advertisServiceUUIDs[0].toUpperCase().startsWith("00006958")) {
-            continue
+        // 是否需要过滤
+        if (app.globalData.isScanFilter) {
+          if (tempDevice.advertisServiceUUIDs.length == 1) {
+            if (!tempDevice.advertisServiceUUIDs[0].toUpperCase().startsWith("00006958")) {
+              continue
+            }
+          }
+          else if (tempDevice.advertisServiceUUIDs.length == 4) {
+            if (!tempDevice.advertisServiceUUIDs[0].toUpperCase().startsWith("00006958") &&
+                !tempDevice.advertisServiceUUIDs[0].toUpperCase().startsWith("00006959")) {
+                  continue
+            }
+          }
+          else {
+            continue;
           }
         }
-        else if (tempDevice.advertisServiceUUIDs.length == 4) {
-          if (!tempDevice.advertisServiceUUIDs[0].toUpperCase().startsWith("00006958") &&
-              !tempDevice.advertisServiceUUIDs[0].toUpperCase().startsWith("00006959")) {
-                continue
-          }
-        }
-        else {
-          continue;
-        }
+        
 
         if (!this.isExist(tempDevice)) {
           newData.push(tempDevice)

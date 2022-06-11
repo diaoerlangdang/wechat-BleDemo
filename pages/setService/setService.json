@@ -1,0 +1,6 @@
+{
+  "usingComponents": {
+    "van-field": "@vant/weapp/field/index"
+  },
+  "navigationBarTitleText": "服务设置"
+}

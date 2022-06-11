@@ -1,0 +1,47 @@
+<!--pages/setService/setService.wxml-->
+<view class="container">
+  <view class="item"> 
+    <text>主服务：</text>
+    <van-field
+    model:value="{{ mainService }}"
+    placeholder="请输入主服务"
+    border="{{ true }}"
+  />
+  </view>
+
+  <view class="item"> 
+    <text>通知服务：</text>
+    <van-field
+    model:value="{{ receiveCharacteristic }}"
+    placeholder="请输入通知服务"
+    border="{{ true }}"
+  />
+  </view>
+
+  <view class="item"> 
+    <text>发送服务：</text>
+    <van-field
+    model:value="{{ sendCharacteristic }}"
+    placeholder="请输入发送服务"
+    border="{{ true }}"
+  />
+  </view>
+
+  <view class="tips">
+    <text>
+      * 输入的格式为xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+    </text>
+    <text>
+      *两字节服务请输入格式为0000xxxx-0000-1000-8000-00805f9b34fb的数据，请将xxxx更换为对应的两字节服务
+    </text>
+  </view>
+
+  <view class="btn">
+    <van-button bindtap="save" block round color="#0387FE">保存</van-button>
+  </view>
+
+  <view class="btn">
+    <van-button bindtap="resetDefault" block round >恢复默认</van-button>
+  </view>
+
+</view>
