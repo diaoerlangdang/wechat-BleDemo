@@ -15,6 +15,9 @@ Page({
     inputData:"",
     inputPlaceholder: '请输入十六进制数',
 
+    // 没包发送的最大数
+    sendGroupMaxLen: 20,
+
     sendByteLen: 0, // 已发送的字节数长度
     receiveByteLen: 0, // 已接收的字节数长度
     receiveSpeed: 0, // 实时速率，每秒接收字节数
@@ -158,6 +161,8 @@ Page({
   bindSend() {
     // var device = app.globalData.selectDevice
 
+    const sendGroupMaxLen = this.data.sendGroupMaxLen
+
     let tempSendData = this.data.inputData
     let sendDataLen = 0;
     // 十六进制
@@ -183,7 +188,7 @@ Page({
       resolve(tempSendData);
     });
 
-    var count = parseInt((tempSendData.length + 39)/40)
+    var count = parseInt((tempSendData.length + sendGroupMaxLen*2 - 1)/(sendGroupMaxLen*2))
     for(var i=0; i<count; i++) {
       p = p.then(this.sendData)
     }
@@ -201,10 +206,11 @@ Page({
   sendData(data) {
 
     var device = app.globalData.selectDevice
+    const sendGroupMaxLen = this.data.sendGroupMaxLen
 
     //前20个字节
-    var before = data.substring(0, 40)
-    var after = data.substring(40)
+    var before = data.substring(0, sendGroupMaxLen*2)
+    var after = data.substring(sendGroupMaxLen*2)
 
     console.log('发送数据'+before)
 
@@ -236,7 +242,6 @@ Page({
         },
         complete: (res) => {
           // complete
-          console.log('write', res)
         }
       })
     })
@@ -322,6 +327,25 @@ Page({
             }
           })
 
+          wx.onBLEMTUChange(res => {
+            this.setData({
+              sendGroupMaxLen: res.mtu
+            })
+          })
+
+          // 需要获取mtu
+          if (device.bRefreshMtu) {
+            wx.setBLEMTU({
+              deviceId: device.deviceId,
+              mtu: 512,
+              // success: (res)=> {
+              //   console.log('setBLEMTU ', res)
+              // },
+              // fail: (res) => {
+              //   console.log('setBLEMTU  fail ', res)
+              // }
+            })
+          }
         },
         fail:(res)=> {
           console.log('服务扫描失败',res)
