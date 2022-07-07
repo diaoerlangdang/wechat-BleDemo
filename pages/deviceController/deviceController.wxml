@@ -49,7 +49,7 @@
 </view>
 
 <view class="footer">
-    <input class="footer-input" bindinput="bindInputData" placeholder="{{inputPlaceholder}}" value='' />
+    <input class="footer-input" bindinput="bindInputData" maxlength="-1" placeholder="{{inputPlaceholder}}" value='' />
     <van-button class="sendBtn" bindtap="bindSend" color="#0387FE">发送</van-button>
 </view>
 
