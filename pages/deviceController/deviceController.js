@@ -329,7 +329,7 @@ Page({
 
           wx.onBLEMTUChange(res => {
             this.setData({
-              sendGroupMaxLen: res.mtu
+              sendGroupMaxLen: res.mtu - 3
             })
           })
 
@@ -337,7 +337,7 @@ Page({
           if (device.bRefreshMtu) {
             wx.setBLEMTU({
               deviceId: device.deviceId,
-              mtu: 512,
+              mtu: 153,
               // success: (res)=> {
               //   console.log('setBLEMTU ', res)
               // },
