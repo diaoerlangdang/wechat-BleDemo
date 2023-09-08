@@ -14,10 +14,29 @@ Page({
     isToasting: false,
 
     initSuccess: true, //初始化是否成功
+    bAgree:false,
   },
 
-  onLoad() {
-    
+  onLoad() {    
+  },
+
+  onHide() {
+    if (this.data.isScanning) {
+      this.scan();
+    }
+  },
+
+  // 是否同意协议
+  onAgreeEvent(bAgree) {
+    this.setData({
+      bAgree:bAgree
+    })
+    if (bAgree) {
+      this.init()
+    }
+  },
+
+  init() {
     this.monitorBleChange()
 
     this.initBle()
@@ -75,12 +94,6 @@ Page({
         }, 200) //延迟时间 这里是300ms 
       }
     }, 5000) //循环时间 这里是5秒 
-  },
-
-  onHide() {
-    if (this.data.isScanning) {
-      this.scan();
-    }
   },
 
 

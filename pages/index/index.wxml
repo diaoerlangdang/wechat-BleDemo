@@ -24,3 +24,5 @@
 </scroll-view>
 
 </view>
+
+<Privacy bind:agreeEvent="onAgreeEvent" />
