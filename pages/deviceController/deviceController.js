@@ -8,7 +8,8 @@ Page({
    * 页面的初始数据
    */
   data: {
-    dataList:[{dataType:"其他",content:"正在连接。。。"}],
+    timer: null,
+    dataList:[{dataType:"其他",content:"正在连接..."}],
     receiveType:"接收",
     sendType:"发送",
     otherType:"其他",
@@ -19,6 +20,8 @@ Page({
     sendGroupMaxLen: 20,
 
     sendByteLen: 0, // 已发送的字节数长度
+    sendSpeed: 0, // 每秒发送字节数
+    sendLenBySecond:0, //计算速率使用
     receiveByteLen: 0, // 已接收的字节数长度
     receiveSpeed: 0, // 实时速率，每秒接收字节数
     recLenBySecond: 0, // 计算速率使用
@@ -70,7 +73,7 @@ Page({
       success: (res) =>{ 
         // success
         console.log('createBLEConnection')
-        this.addData({dataType:"其他",content:"连接成功，正在扫描服务。。。"})
+        this.addData({dataType:"其他",content:"连接成功，正在扫描服务..."})
         this.getServiceAndCharacteristics(device)
 
       },
@@ -122,16 +125,30 @@ Page({
         // success
       }
     })
+
+    if (this.data.timer) {
+      clearInterval(this.data.timer);
+    }
   },
 
   // 开始计算速率
   startComputeSpeedTimer() {
-    setInterval(() => {
+    if (this.data.timer) {
+      clearInterval(this.data.timer);
+    }
+    
+    var timer = setInterval(() => {
       this.setData({
         receiveSpeed: this.data.recLenBySecond,
         recLenBySecond: 0,
+        sendSpeed: this.data.sendLenBySecond,
+        sendLenBySecond:0,
       })
     }, 1000) //循环时间 这里是1秒 
+
+    this.setData({
+      timer: timer
+    });
   },
 
   //input输入
@@ -181,6 +198,7 @@ Page({
 
     this.setData({
       sendByteLen: this.data.sendByteLen + sendDataLen,
+      sendLenBySecond: this.data.sendLenBySecond + sendDataLen,
     })
     
     var p = new Promise((resolve, reject) => {
@@ -278,7 +296,7 @@ Page({
             success:(res) => {
               console.log('特征',res)
 
-              this.addData({dataType:"其他",content:'扫描成功，正在打开数据服务通知。。。'})
+              this.addData({dataType:"其他",content:'扫描成功，正在打开数据服务通知...'})
 
               wx.notifyBLECharacteristicValueChanged({
                 deviceId: device.deviceId,

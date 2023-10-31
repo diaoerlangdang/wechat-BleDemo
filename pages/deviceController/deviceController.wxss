@@ -1,65 +1,70 @@
 /* pages/deviceController/deviceController.wxss */
 
+.page-box {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
+
+.page-header {
+  width: 100%;
+  padding-left: 10rpx;
+  padding-right: 10rpx;
+}
 .tips {
   display: flex;
   flex-direction: row;
-  flex-wrap: wrap;
   width: 100%;
-  margin: 0 auto;
-  position: fixed;
-  padding-left: 10px;
   padding-bottom: 3px;
-  top: 0rpx;
-  padding-right: 10px;
   background: #fff;
 }
 
 .tips_text {
   font-size: 9px;
+  flex:1;
+  padding-right: 20rpx;
 }
 
-.tips_receivce_bytes {
-  float: right;
-  margin-right: 3%;
-  padding-right: 10px;
+.tips_right {
+  text-align: right;
 }
 
-.tips_speed {
-  margin: 0 auto;
-}
 
-.title {
-    padding-left: 10px;
-    padding-right: 5px;
-    position: fixed;
+.title-box {
+    padding: 10px;
     width: 100%;
-    top: 0rpx;
-    margin-top: 15px;
     overflow: hidden;
     background: #fff;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.btn-box {
+  flex:1;
+  text-align: right;
 }
 
 .titleBtn {
   height: 30px;
-  display: block;
-  margin-right: 3%;
-  float: right;
+  margin-right: 20rpx;
 }
 
 .data-list {
-  padding-bottom: 60px;
-  padding-top: 35px;
+  flex:1;
+  height: 0;
+  padding-bottom: 15rpx;
+  overflow-y: auto;
 }
 
 .footer {
-    background: #fff;
-    padding-left: 1%;
-    padding-right: 1%;
-    padding-bottom: 10px;
-    position: fixed;
-    width: 100%;
-    bottom: 0rpx;
-    overflow: hidden;
+  background: #fff;
+  padding-left: 1%;
+  padding-right: 1%;
+  padding-bottom: 10px;
+  display: flex;
+  overflow: hidden;
 }
 
 .footer-input {
@@ -69,14 +74,13 @@
     padding-right: 10px;
     border-radius: 5px;
     height: 40px;
-    width: 70%;
+    flex:1;
 }
 
-.sendBtn {
+.send-btn-box {
   height: 40px;
   display: block;
-  margin-right: 3%;
-  float: right;
+  padding-left: 10rpx;
 }
 
 /*列表单元主体*/
